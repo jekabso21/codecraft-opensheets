@@ -13,8 +13,8 @@
             top: 2vh;
             overflow-y: hidden;
             border-color: #000;
-            border-width: 20px;
-            border-radius: 10px;
+            border-width: 10px;
+            border-radius: 5px;
         }
         ::-webkit-scrollbar {
             display: none;
@@ -69,7 +69,7 @@
         document.addEventListener('keyup', function (data) {
             if (data.which == 27) {
                 SHOW_HIDE();
-                $.post("https://codecraft-opensheets/NUI:close", JSON.stringify({
+                $.post("https://codecraft-opensheets/NUI:close", JSON.stringify({ // Change this to your resource name
                     hide: true
                 }))
             }
