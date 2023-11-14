@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        #sheet_window{
+            position: relative;
+            width: 90%;
+            height: 90vh;
+            left: 50%;
+            margin-left: -45%;
+            top: 2vh;
+            overflow-y: hidden;
+            border-color: #000;
+            border-width: 20px;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+<div id="sheet"></div>
+
+
+<script>
+    $(document).ready(function () {
+        var $tabContainer = $("#sheet");
+        function SHOW_HIDE(bool) {
+            if (bool) {
+                $tabContainer.show();
+            } else {
+                $tabContainer.hide();
+                window.blur()
+            }
+        }
+        SHOW_HIDE(false);
+        window.addEventListener('message', function (event) {
+            var item = event.data;
+            if (item.showtab) {
+                if(item.url != undefined){
+                    try {
+                        var url;
+                        if(item.url.startsWith('http')) {
+                            // If item.url is a URL string
+                            url = {
+                                url: item.url
+                            };
+                        } else {
+                            // Assume item.url is a JSON string
+                            url = JSON.parse(item.url);
+                        }
+                        $('#sheet').html('<iframe id="sheet_window" style="overflow: hidden;" src="'+url.url+'"></iframe>');
+                    } catch (e) {
+                        console.error("Parsing error:", e, "Data:", item.url);
+                    }
+
+                }
+                SHOW_HIDE(true)
+            }
+            else if (item.hidetab) {
+                $('#sheet').html('')
+                SHOW_HIDE()
+            }
+        });
+        document.addEventListener('keyup', function (data) {
+            if (data.which == 27) {
+                SHOW_HIDE();
+                $.post("https://codecraft-opensheets/NUI:close", JSON.stringify({
+                    hide: true
+                }))
+            }
+        });
+    });
+</script>
+</body>
+</html>
