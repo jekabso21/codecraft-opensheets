@@ -3,7 +3,7 @@ local tabLoaded = true
 photoUrl = nil
 
 RegisterCommand('docs', function(source, args, raw)
-    TriggerEvent('codecraft:openMdt', args[1])
+    TriggerEvent('codecraft:opengoogle', args[1])
 end)
 
 
@@ -24,15 +24,19 @@ RegisterNUICallback("NUI:close", function()
     stopAnim()
 end)
 
-RegisterNetEvent("codecraft:openMdt")
-AddEventHandler("codecraft:openMdt", function(url)
+RegisterNetEvent("codecraft:opengoogle")
+AddEventHandler("codecraft:opengoogle", function(url)
     tabEnabled = not tabEnabled
-    if tabEnabled then
-        startAnim()
+    if string.match(url, 'google%.com') then
+        if tabEnabled then
+            startAnim()
+        else
+            stopAnim()
+        end
+        NUIFOCUSFN(tabEnabled, url)
     else
-        stopAnim()
+        print("The provided URL does not contain 'google.com'")
     end
-    NUIFOCUSFN(tabEnabled, url)
 
 end)
 
